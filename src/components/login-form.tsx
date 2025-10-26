@@ -6,10 +6,9 @@ import {
   FieldDescription,
   FieldGroup,
   FieldLabel,
-  FieldSeparator,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import Logo from "@/assets/makita.png"
+import MakitaSignIn from "@/assets/sign-in-makitaconecta.svg"
 import { NavLink } from "react-router"
 
 export function LoginForm({
@@ -59,7 +58,7 @@ export function LoginForm({
           </form>
           <div className="bg-muted relative hidden md:block">
             <img
-              src={Logo}
+              src={MakitaSignIn}
               alt="Image"
               className="absolute  inset-0 h-full w-full object-cover "
             />
