@@ -1,73 +1,19 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Makita Conecta
 
-Currently, two official plugins are available:
+Uma plataforma web para conectar quem quer adotar com protetores e ONGs. Nosso objetivo é simplificar o processo de adoção responsável, centralizando a busca por pets e dando mais visibilidade aos animais que precisam de um lar.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🐾 Problemática:
 
-## React Compiler
+Muitos animais abandonados não encontram lares por falta de visibilidade e organização no processo de adoção. Ao mesmo tempo, pessoas interessadas em adotar não têm acesso fácil e centralizado às informações sobre pets disponíveis.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+**Público-alvo:**
+- Protetores e ONGs que desejam cadastrar e divulgar animais para adoção;
+- Adotantes que buscam encontrar um pet de forma simples, rápida e responsável;
 
-## Expanding the ESLint configuration
+## 💻 Solução proposta:
+O MakitaConecta será uma plataforma web que conecta adotantes a protetores e ONGs, reunindo em um só lugar o cadastro e a busca de pets disponíveis. O sistema permitirá divulgar animais com fotos e informações detalhadas, aplicar filtros de pesquisa e facilitar o contato entre as partes, promovendo a adoção responsável de forma prática e acessível.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+**Homenagem à Makita:**
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Este projeto é uma singela homenagem à Makita, uma cachorrinha que, por dez anos, fez do IFCE - Campus Aracati seu lar. Inspirados pelo acolhimento e carinho que ela recebeu da nossa comunidade acadêmica, criamos esta plataforma para que todos os animais abandonados possam encontrar um lar cheio de amor. Assim como a Makita foi acolhida e se tornou parte da nossa família, esperamos que muitos outros pets possam ter a mesma oportunidade, encontrando pessoas e lugares que os recebam de braços abertos.
