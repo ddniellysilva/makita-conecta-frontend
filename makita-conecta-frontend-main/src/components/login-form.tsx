@@ -10,13 +10,12 @@ import {
 import { Input } from "@/components/ui/input"
 import MakitaSignIn from "@/assets/sign-in-makitaconecta.svg"
 import { NavLink } from "react-router"
-import { useState } from "react"
 import { useForm } from "react-hook-form"
 import {z} from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import clsx from "clsx"
-
-const API_URL = "http://127.0.0.1:5000";
+import { useContext } from "react"
+import { SessionContext } from "@/contexts/session"
 
 const loginFormValidationSchema = z.object({
   email: z.email('Digite um e-mail válido'),
@@ -29,8 +28,8 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const {signIn} = useContext(SessionContext)
 
-  const [apiError, setApiError] = useState<string | null>(null);
   const {register, handleSubmit, formState: {errors, isSubmitting}} = useForm<LoginFormData>({
     resolver: zodResolver(loginFormValidationSchema),
     defaultValues: {
@@ -40,36 +39,14 @@ export function LoginForm({
   })
 
   async function handleSignIn(data: LoginFormData){
-  setApiError(null); // Limpar erros anteriores
-
-  try {
-    const response = await fetch(`${API_URL}/api/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data), 
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      // Ex: "E-mail ou senha inválidos"
-      setApiError(result.message || "Ocorreu um erro. Tente novamente.");
-      return;
+    try{
+      await signIn(data.email, data.password)
+    }catch(error){
+      if(error instanceof Error){
+        alert(error.message)
+      }
     }
-
-    // Sucesso! Salvar o token
-    console.log("Token de acesso:", result.access_token);
-    localStorage.setItem("access_token", result.access_token);
-
-    alert("Login realizado com sucesso!");
-
-  } catch (error) {
-    console.error("Erro ao conectar com a API:", error);
-    setApiError("Não foi possível conectar ao servidor. Tente mais tarde.");
   }
-}
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -77,13 +54,6 @@ export function LoginForm({
         <CardContent className="grid p-0 md:grid-cols-2">
           <form onSubmit={handleSubmit(handleSignIn)} className="p-6 md:p-8">
             <FieldGroup>
-
-              {apiError && (
-                <FieldDescription className="text-destructive text-sm font-semibold text-center mb-4">
-                {apiError}
-                </FieldDescription>
-              )}
-
               <div className="flex flex-col items-center gap-2 text-center">
                 <h1 className="text-2xl font-bold">Makita Conecta</h1>
                 <p className="text-muted-foreground text-balance">

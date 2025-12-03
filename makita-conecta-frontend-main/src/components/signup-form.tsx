@@ -8,15 +8,14 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { NavLink } from "react-router"
-import { useState } from "react"
+import { NavLink, useNavigate } from "react-router"
 import MakitaSignUp from "@/assets/sign-up-makitaconecta.svg"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import {zodResolver} from "@hookform/resolvers/zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 import clsx from "clsx"
+import { useState } from "react"
 
-const API_URL = "http://127.0.0.1:5000";
 const signUpFormValidationSchema = z.object({
   name: z.string().min(2, "O nome deve ter no mínimo 2 caracteres"),
   email: z.email('Digite um e-mail válido'),
@@ -29,48 +28,60 @@ const signUpFormValidationSchema = z.object({
 
 type SignUpFormData = z.infer<typeof signUpFormValidationSchema>
 
+const API_URL = "http://127.0.0.1:5000";
+
 export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const [apiError, setApiError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  
+  const navigate = useNavigate();
 
-  const {register, handleSubmit, formState: {errors, isSubmitting}} = useForm<SignUpFormData>({
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<SignUpFormData>({
     resolver: zodResolver(signUpFormValidationSchema),
   })
 
-  async function handleSignUp(data: SignUpFormData){
-  setApiError(null); // Limpa erros antigos
+  async function handleSignUp(data: SignUpFormData) {
+    setApiError(null);
+    setSuccessMessage(null);
 
-  try {
-    const response = await fetch(`${API_URL}/api/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: data.name,
-        email: data.email,
-        password: data.password, 
-      }),
-    });
+    try {
+      const response = await fetch(`${API_URL}/api/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          password: data.password,
+        }),
+      });
 
-    const result = await response.json();
+      const result = await response.json();
 
-    if (!response.ok) {
-      // Ex: "E-mail já cadastrado"
-      setApiError(result.message || "Ocorreu um erro. Tente novamente.");
-      return;
+      if (!response.ok) {
+        throw new Error(result.message || "Erro desconhecido ao cadastrar.");
+      }
+
+      console.log("Cadastro com sucesso! Exibindo mensagem...");
+      setSuccessMessage("Cadastro realizado com sucesso! Redirecionando...");
+
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+
+    } catch (error) {
+      console.error(error);
+      if (error instanceof Error) {
+        setApiError(error.message);
+      } else {
+        setApiError("Não foi possível conectar ao servidor.");
+      }
     }
-
-    // Sucesso!
-    alert("Cadastro realizado com sucesso! Você será redirecionado para o login.");
-
-  } catch (error) {
-    console.error("Erro ao conectar com a API:", error);
-    setApiError("Não foi possível conectar ao servidor. Tente mais tarde.");
   }
-}
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -78,11 +89,37 @@ export function SignupForm({
         <CardContent className="grid p-0 md:grid-cols-2">
           <form onSubmit={handleSubmit(handleSignUp)} className="p-6 md:p-8">
             <FieldGroup>
+              
               {apiError && (
-                <FieldDescription className="text-destructive text-sm font-semibold text-center mb-4">
-                {apiError}
-                </FieldDescription>
+                <div style={{ 
+                  backgroundColor: '#fee2e2', 
+                  color: '#991b1b', 
+                  padding: '12px', 
+                  borderRadius: '6px',
+                  marginBottom: '16px',
+                  textAlign: 'center',
+                  border: '1px solid #f87171'
+                }}>
+                  {apiError}
+                </div>
               )}
+
+              {successMessage && (
+                <div style={{ 
+                  backgroundColor: '#dcfce7', 
+                  color: '#166534', 
+                  padding: '12px', 
+                  borderRadius: '6px',
+                  marginBottom: '16px',
+                  textAlign: 'center',
+                  border: '1px solid #4ade80',
+                  fontWeight: 'bold'
+                }}>
+                  {successMessage}
+                </div>
+              )}
+
+
               <div className="flex flex-col items-center gap-2 text-center">
                 <h1 className="text-2xl font-bold">Crie sua conta</h1>
                 <p className="text-muted-foreground text-sm text-balance">
@@ -141,13 +178,13 @@ export function SignupForm({
                   </Field>
                   {(errors.confirmPassword || errors.password) && (
                     <FieldDescription className="text-destructive text-xs">
-                      {errors.confirmPassword?.message}
+                      {errors.password?.message || errors.confirmPassword?.message}
                     </FieldDescription>
                   )}
                 </div>
               </Field>
               <Field>
-                <Button type="submit" disabled={isSubmitting}>
+                <Button type="submit" disabled={isSubmitting || !!successMessage} className="w-full">
                   {
                     isSubmitting ? (
                       <div className="flex items-center justify-center">
