@@ -130,7 +130,7 @@ npm run dev
 
 DEIXE ESTE SEGUNDO TERMINAL ABERTO TAMBÉM!
 
-## Pronto!
+### Pronto!
 
 Se os dois terminais estiverem rodando (o Backend na porta 5000 e o Frontend na porta 5173), a aplicação está funcionando!
 
